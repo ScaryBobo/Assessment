@@ -1,5 +1,9 @@
 package VTTP.Assessment;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,16 +32,18 @@ class AssessmentApplicationTests {
 	private MockMvc mvc; 
 
 	@Test
-	void getQuotationIsWorking() {
+	void getQuotationIsWorking () throws Exception {
 
 	List<String> dummyItems = new ArrayList<>();
 	dummyItems.add("durian");
-	dummyItems.add("plum");
+	dummyItems.add("apple");
 	dummyItems.add("pear");
 
-	Assertions.assertNotNull(quoSvc.getQuotations(dummyItems));
+	// Optional<Quotation> result = quoSvc.getQuotations(dummyItems); 
 	
-	//"plum" is not inside the dropdown list, hence the test will fail. Replace "plum" with "apple", test will pass.
+	//Assertions.assertTrue (result.isEmpty());
+		Assertions.assertThrows(Exception.class, () -> {quoSvc.getQuotations(dummyItems);});	
+	
 	}
 
 }

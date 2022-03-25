@@ -1,6 +1,7 @@
 package VTTP.Assessment.Service;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
@@ -57,7 +58,7 @@ public class QuotationService {
                 quoteInstance.addQuotation(x.getString("item"), (float)x.getJsonNumber("unitPrice").doubleValue());
             }
             quoteInstance.setQuoteId(quoteId);
-        } catch (Exception e){
+        } catch (IOException e){
             System.out.println("Error" + e.getMessage());
             return Optional.empty();
         }
