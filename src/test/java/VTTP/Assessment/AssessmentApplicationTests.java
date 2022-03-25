@@ -36,7 +36,7 @@ class AssessmentApplicationTests {
 
 	List<String> dummyItems = new ArrayList<>();
 	dummyItems.add("durian");
-	dummyItems.add("apple");
+	dummyItems.add("plum");
 	dummyItems.add("pear");
 
 	// Optional<Quotation> result = quoSvc.getQuotations(dummyItems); 
