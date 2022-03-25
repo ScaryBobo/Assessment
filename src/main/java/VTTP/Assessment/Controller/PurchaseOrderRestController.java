@@ -8,8 +8,11 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
+
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
@@ -38,7 +41,7 @@ public class PurchaseOrderRestController {
 
 
     @PostMapping(path="/po", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> placeOrder(@RequestBody String payload, HttpServletRequest request){
+    public ResponseEntity<String> placeOrder(@RequestBody String payload, HttpServletRequest request){
         //System.out.println(">>>Payload : " + payload);
       
      
@@ -59,21 +62,38 @@ public class PurchaseOrderRestController {
             quoteOfItems = quoSvc.getQuotations(items).orElse(null);
 
 
+            double cost = 0;
             double totalCost = 0;
+            List<Double> costOfIndividualItems = new ArrayList<>();
 
             for (int i = 0; i< itemArray.size(); i++){
-                
                 String itemName = itemArray.getJsonObject(i).getString("item");
-                totalCost = (itemArray.getJsonObject(i).getInt("quantity")) * (quoteOfItems.getQuotation(itemName));
-                
+                cost = (itemArray.getJsonObject(i).getInt("quantity"))*(quoteOfItems.getQuotation(itemName));
+                costOfIndividualItems.add(cost);
             }
 
+            for (int i = 0 ; i< costOfIndividualItems.size(); i++){
+                totalCost += costOfIndividualItems.get(i);
+            }
+
+            System.out.println(costOfIndividualItems.toString());
             System.out.println(totalCost);
             
+            JsonObject customerProfile = Json.createObjectBuilder()
+                        .add ("invoiceId", quoteOfItems.getQuoteId())
+                        .add("name", req.getString("name"))
+                        .add("total", totalCost)
+                        .build();
+            
+            return ResponseEntity.ok(customerProfile.toString());
             
             } catch (IOException e){
+                JsonObject customerProfile = Json.createObjectBuilder()
+                        .build();
                 
+                 return ResponseEntity.badRequest().body(customerProfile.toString());
+
             } 
-            return null;
-}
+    
+    }
 }

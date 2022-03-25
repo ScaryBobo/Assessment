@@ -55,18 +55,12 @@ public class QuotationService {
             for (int i = 0; i < quoteArrayJson.size(); i++){
                 JsonObject x = quoteArrayJson.getJsonObject(i);
                 quoteInstance.addQuotation(x.getString("item"), (float)x.getJsonNumber("unitPrice").doubleValue());
-
             }
-
             quoteInstance.setQuoteId(quoteId);
-
         } catch (Exception e){
             System.out.println("Error" + e.getMessage());
             return Optional.empty();
         }
-
-
         return Optional.of(quoteInstance);
-        
     }
 }
